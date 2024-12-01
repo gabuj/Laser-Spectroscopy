@@ -7,7 +7,7 @@ c= const.c
 h= const.h
 e= const.e
 
-# Transition frequencies for Rubidium 87 in Hz
+# Transition frequencies for Rubidium 85 in Hz
 Rb85S2_P1 = 384228522.3211e6
 Rb85S2_P2 = 384228551.6941e6
 Rb85S2_P3 = 384228615.0941e6
