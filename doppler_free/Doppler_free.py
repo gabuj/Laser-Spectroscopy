@@ -15,12 +15,16 @@ k=1.38e-23#Boltzmann constant in J/K
 def gaussian(x, m,std,A):
     return A*np.exp(-(x-m)**2/(2*std**2))
 
-def lorentiazin(x, m, std, A):
-    return A/(1+((x-m)/std)**2)
+#Define Lorentzian function
+#Gamma is the full width at half maximum
+#X corresponds to the frequency
+#X0 corresponds to the central frequency of the transition
+def lorentzian(x, gamma, x0):
+    return (1/(np.pi)) * ((gamma/2)**2)/((x-x0)**2+(gamma/2)**2)
 
-def spectrum(x, m1, std1, A1, m2, std2, A2, m3, std3, A3, m4, std4, A4, I0):
+def spectrum(x, gamma_1, x0_1, gamma_2, x0_2, gamma_3, x0_3, gamma_4, x0_4):
     #change I0 if you're using
-    return I0+ (gaussian(x, m1, std1, A1) + gaussian(x, m2, std2, A2) + gaussian(x, m3, std3, A3) + gaussian(x, m4, std4, A4))
+    return I0+ (lorentzian(x, gamma_1, x0_1) + lorentzian(x, gamma_2, x0_2) + lorentzian(x, gamma_3, x0_3) + lorentzian(x, gamma_4, x0_4))
 
 # def TemperatureRb(mean, std,std_err,m):
 #     #find temperature using doppler boradening formula
