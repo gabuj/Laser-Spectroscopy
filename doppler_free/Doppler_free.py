@@ -19,12 +19,12 @@ def gaussian(x, m,std,A):
 #Gamma is the full width at half maximum
 #X corresponds to the frequency
 #X0 corresponds to the central frequency of the transition
-def lorentzian(x, gamma, x0):
-    return (1/(np.pi)) * ((gamma/2)**2)/((x-x0)**2+(gamma/2)**2)
+def lorentzian(x, gamma, x0,A):
+    return A*(2/(np.pi)*gamma) * ((gamma)**2)/(4*(x-x0)**2+(gamma)**2)*A
 
-def spectrum(x, gamma_1, x0_1, gamma_2, x0_2, gamma_3, x0_3, gamma_4, x0_4):
+def spectrum(x, gamma_1, x0_1, gamma_2, x0_2, gamma_3, x0_3, gamma_4, x0_4, gamma_5, x0_5, gamma_6, x0_6, gamma_7, x0_7, gamma_8, x0_8, gamma_9, x0_9, gamma_10, x0_10, gamma_11, x0_11, gamma_12, x0_12, gamma_13, x0_13, gamma_14, x0_14, gamma_15, x0_15, gamma_16, x0_16, gamma_17, x0_17, gamma_18, x0_18, gamma_19, x0_19, gamma_20, x0_20, gamma_21, x0_21, gamma_22, x0_22, gamma_23, x0_23, gamma_24, x0_24, I0, A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11, A12, A13, A14, A15, A16, A17, A18, A19, A20, A21, A22, A23, A24):
     #change I0 if you're using
-    return I0+ (lorentzian(x, gamma_1, x0_1) + lorentzian(x, gamma_2, x0_2) + lorentzian(x, gamma_3, x0_3) + lorentzian(x, gamma_4, x0_4))
+    return I0+ (lorentzian(x, gamma_1, x0_1,A1)+lorentzian(x, gamma_2, x0_2,A2)+lorentzian(x, gamma_3, x0_3,A3)+lorentzian(x, gamma_4, x0_4,A4)+lorentzian(x, gamma_5, x0_5,A5)+lorentzian(x, gamma_6, x0_6,A6)+lorentzian(x, gamma_7, x0_7,A7)+lorentzian(x, gamma_8, x0_8,A8)+lorentzian(x, gamma_9, x0_9,A9)+lorentzian(x, gamma_10, x0_10,A10)+lorentzian(x, gamma_11, x0_11,A11)+lorentzian(x, gamma_12, x0_12,A12) + lorentzian(x,gamma_13, x0_13,A13)+lorentzian(x, gamma_14, x0_14,A14)+lorentzian(x, gamma_15, x0_15,A15)+lorentzian(x, gamma_16, x0_16,A16)+lorentzian(x, gamma_17, x0_17,A17)+lorentzian(x, gamma_18, x0_18,A18)+lorentzian(x, gamma_19, x0_19,A19)+lorentzian(x, gamma_20, x0_20,A20)+lorentzian(x, gamma_21, x0_21,A21)+lorentzian(x, gamma_22, x0_22,A22)+lorentzian(x, gamma_23, x0_23,A23)+lorentzian(x, gamma_24, x0_24,A24))
 
 # def TemperatureRb(mean, std,std_err,m):
 #     #find temperature using doppler boradening formula
@@ -59,8 +59,8 @@ def calibrate_to_wavelength(peaks, calibration_wavelengths):
 
 
 #load data
-filename = 'doppler_free/FREE_2.csv'
-background_filename = 'doppler_free/BGFREE_2.csv'
+filename = 'FREE_3.csv'
+background_filename = 'BGFREE_3.csv'
 data = np.loadtxt(filename, delimiter = ',', skiprows = 1)
 background = np.loadtxt(background_filename, delimiter = ',', skiprows = 1)
 
@@ -69,102 +69,133 @@ t = np.array(data[:,0])
 intensities = np.array(data[:,1]) - np.array(background[:,1])
 
 
-#plot data
-plt.plot(t, intensities, 'b-', label = 'data')
-plt.xlabel('time (microseconds?)')
-plt.ylabel('Intensity (V)')
-plt.legend()
-plt.title('Doppler free spectrum of rubidium')
-plt.show()
+# #plot data
+# plt.plot(t, intensities, 'b-', label = 'data')
+# plt.xlabel('time (microseconds?)')
+# plt.ylabel('Intensity (V)')
+# plt.legend()
+# plt.title('Doppler free spectrum of rubidium')
+# plt.show()
 
 #we expect 3 spliting per ground level weith one burn hole each so 6 peals in total times 4 ground states = 24 peaks
 
-#initial guesses for the fit parameters
+#initial guesses for the lorenzian fit parameters
 
-m1_guess = 0.303
-std1_guess = 0.001
-A1_guess = 1.04
+gamma1_guess= 0.0001
+x0_1_guess = 0.08000
+A1_guess = 20
 
-m2_guess = 0.309
-std2_guess = 0.001
-A2_guess = 2.04
+gamma2_guess = 0.0001
+x0_2_guess = 0.0803
+A2_guess = 35
 
-m3_guess = 0.3206
-std3_guess = 0.001
-A3_guess = 9.98
+gamma3_guess = 0.0001
+x0_3_guess = 0.0805
+A3_guess = 28
 
-m4_guess = 0.3305
-std4_guess = 0.001
-A4_guess = 0.26
+gamma4_guess = 0.0001
+x0_4_guess = 0.0807
+A4_guess = 26
 
-I0_guess = 0.9
+gamma5_guess = 0.0001
+x0_5_guess = 0.0810
+A5_guess = 12
+
+gamma6_guess = 0.0001
+x0_6_guess = 0.0812
+A6_guess = 12
+
+gamma7_guess = 0.0001
+x0_7_guess = 0.0915
+A7_guess = 50
+
+gamma8_guess = 0.0001
+x0_8_guess = 0.0917
+A8_guess = 80
+
+gamma9_guess = 0.0001
+x0_9_guess = 0.0919
+A9_guess = 60
+
+gamma10_guess = 0.0001
+x0_10_guess = 0.0920
+A10_guess = 30
+
+gamma11_guess = 0.0001
+x0_11_guess = 0.0921
+A11_guess = 22
+
+gamma12_guess = 0.0001
+x0_12_guess = 0.0922
+A12_guess = 16
+
+gamma13_guess = 0.0001
+x0_13_guess = 0.1042
+A13_guess = 60
+
+gamma14_guess = 0.0001
+x0_14_guess = 0.1044
+A14_guess = 170
+
+gamma15_guess = 0.0001
+x0_15_guess = 0.1046
+A15_guess = 150
+
+gamma16_guess = 0.0001
+x0_16_guess = 0.1048
+A16_guess = 55
+
+gamma17_guess = 0.0001
+x0_17_guess = 0.1049
+A17_guess = 40
+
+gamma18_guess = 0.0001
+x0_18_guess = 0.1050
+A18_guess = 20
+
+gamma19_guess = 0.00008
+x0_19_guess = 0.1093
+A19_guess = 50
+
+gamma20_guess = 0.0001
+x0_20_guess = 0.1100
+A20_guess = 110
+
+gamma21_guess = 0.0001
+x0_21_guess = 0.1103
+A21_guess =80
+
+gamma22_guess = 0.0001
+x0_22_guess = 0.1106
+A22_guess = 25
+
+gamma23_guess = 0.0001
+x0_23_guess = 0.1110
+A23_guess = 23
+
+gamma24_guess = 0.0001
+x0_24_guess = 0.1114
+A24_guess = 20
+
+
+I0_guess = -0.02
 
 #FIT DATA TO SUM OF 4 GAUSSIANS
 
-initial_guesses = [m1_guess, std1_guess, A1_guess, m2_guess, std2_guess, A2_guess, m3_guess, std3_guess, A3_guess, m4_guess, std4_guess, A4_guess, I0_guess]
+initial_guesses = [gamma1_guess, x0_1_guess, gamma2_guess, x0_2_guess, gamma3_guess, x0_3_guess, gamma4_guess, x0_4_guess, gamma5_guess, x0_5_guess, gamma6_guess, x0_6_guess, gamma7_guess, x0_7_guess, gamma8_guess, x0_8_guess, gamma9_guess, x0_9_guess, gamma10_guess, x0_10_guess, gamma11_guess, x0_11_guess, gamma12_guess, x0_12_guess, gamma13_guess, x0_13_guess, gamma14_guess, x0_14_guess, gamma15_guess, x0_15_guess, gamma16_guess, x0_16_guess, gamma17_guess, x0_17_guess, gamma18_guess, x0_18_guess, gamma19_guess, x0_19_guess, gamma20_guess, x0_20_guess, gamma21_guess, x0_21_guess, gamma22_guess, x0_22_guess, gamma23_guess, x0_23_guess, gamma24_guess, x0_24_guess, I0_guess, A1_guess, A2_guess, A3_guess, A4_guess, A5_guess, A6_guess, A7_guess, A8_guess, A9_guess, A10_guess, A11_guess, A12_guess, A13_guess, A14_guess, A15_guess, A16_guess, A17_guess, A18_guess, A19_guess, A20_guess, A21_guess, A22_guess, A23_guess, A24_guess]
 #fit gaussians to data
 popt, pcov = curve_fit(spectrum, t, intensities, p0 = initial_guesses)
 
 
 plt.plot(t,intensities, 'b-', label = 'data')
-plt.plot(t, spectrum(t, *popt), 'r-', label = 'fit gaussians')
+plt.plot(t, spectrum(t, *popt), 'r-', label = 'fit lorentzian')
+#plot guesses
+# plt.plot(t, spectrum(t, *initial_guesses), 'g-', label = 'initial guess')
 plt.xlabel('time (s)')
 plt.ylabel('Intensity (V)')
 plt.legend()
 plt.title('Absorption spectrum of rubidium with fit')
 plt.show()
-
-
-#FIT EACH GAUSSIAN SEPARATELY. Gaussian 1 between t=0.2989 and t=0.30575, Gaussian 2 between t=0.30575 and t=0.3117, Gaussian 3 between t=0.3181 and t=0.3233, Gaussian 4 between t=0.3282 and t=0.3331
-
-# #Gaussian 1
-# indexes_1= (t>0.2989) & (t<0.30575)
-# #get first value over threoshold to shift the t_1 values
-# t_1 = t[indexes_1]
-# intensities_1 = intensities[indexes_1]
-
-
-# initial_guesses_1 = [m1_guess, std1_guess, A1_guess, I0_guess]
-# popt_1, pcov_1 = curve_fit(gaussian, t_1, intensities_1, p0 = initial_guesses_1)
-
-# #Gaussian 2
-# indexes_2= (t>0.30575) & (t<0.3117)
-# t_2 = t[indexes_2]
-# intensities_2 = intensities[indexes_2]
-
-
-# initial_guesses_2 = [m2_guess, std2_guess, A2_guess, I0_guess]
-# popt_2, pcov_2 = curve_fit(gaussian, t_2, intensities_2, p0 = initial_guesses_2)
-
-# #Gaussian 3
-# indexes_3= (t>0.3181) & (t<0.3233)
-# t_3 = t[indexes_3]
-# intensities_3 = intensities[indexes_3]
-
-# initial_guesses_3 = [m3_guess, std3_guess, A3_guess, I0_guess]
-# popt_3, pcov_3 = curve_fit(gaussian, t_3, intensities_3, p0 = initial_guesses_3)
-
-# #Gaussian 4
-# indexes_4= (t>0.3282) & (t<0.33331)
-# t_4 = t[indexes_4]
-# intensities_4 = intensities[indexes_4]
-
-
-# initial_guesses_4 = [m4_guess, std4_guess, A4_guess, I0_guess]
-# popt_4, pcov_4 = curve_fit(gaussian, t_4, intensities_4, p0 = initial_guesses_4)
-
-
-# #plot the fit
-# plt.plot(t,intensities, 'b-', label = 'data')
-# plt.plot(t, gaussian(t, *popt_1), 'r-', label = 'fit gaussian1')
-# plt.plot(t, gaussian(t, *popt_2), 'g-', label = 'fit gaussian2')
-# plt.plot(t, gaussian(t, *popt_3), 'y-', label = 'fit gaussian3')
-# plt.plot(t, gaussian(t, *popt_4), 'm-', label = 'fit gaussian4')
-# plt.xlabel('time (s)')
-# plt.ylabel('Intensity (V)')
-# plt.legend()
-# plt.title('Absorption spectrum of rubidium with fit')
-# plt.show()
 
 
 #I expect the first peak to be the first 85R ground state transition, the second peak to be the 85R first excited state transition, the third peak to be the 87R ground state transition and the fourth peak to be the 87R first excited state transition
