@@ -69,9 +69,9 @@ t = np.array(data[:,0])
 intensities = np.array(data[:,1]) - np.array(background[:,1])
 
 
-# #plot data
+#plot data
 # plt.plot(t, intensities, 'b-', label = 'data')
-# plt.xlabel('time (microseconds?)')
+# plt.xlabel('time (ms?)')
 # plt.ylabel('Intensity (V)')
 # plt.legend()
 # plt.title('Doppler free spectrum of rubidium')
@@ -184,14 +184,14 @@ I0_guess = -0.02
 
 initial_guesses = [gamma1_guess, x0_1_guess, gamma2_guess, x0_2_guess, gamma3_guess, x0_3_guess, gamma4_guess, x0_4_guess, gamma5_guess, x0_5_guess, gamma6_guess, x0_6_guess, gamma7_guess, x0_7_guess, gamma8_guess, x0_8_guess, gamma9_guess, x0_9_guess, gamma10_guess, x0_10_guess, gamma11_guess, x0_11_guess, gamma12_guess, x0_12_guess, gamma13_guess, x0_13_guess, gamma14_guess, x0_14_guess, gamma15_guess, x0_15_guess, gamma16_guess, x0_16_guess, gamma17_guess, x0_17_guess, gamma18_guess, x0_18_guess, gamma19_guess, x0_19_guess, gamma20_guess, x0_20_guess, gamma21_guess, x0_21_guess, gamma22_guess, x0_22_guess, gamma23_guess, x0_23_guess, gamma24_guess, x0_24_guess, I0_guess, A1_guess, A2_guess, A3_guess, A4_guess, A5_guess, A6_guess, A7_guess, A8_guess, A9_guess, A10_guess, A11_guess, A12_guess, A13_guess, A14_guess, A15_guess, A16_guess, A17_guess, A18_guess, A19_guess, A20_guess, A21_guess, A22_guess, A23_guess, A24_guess]
 #fit gaussians to data
-popt, pcov = curve_fit(spectrum, t, intensities, p0 = initial_guesses)
+# popt, pcov = curve_fit(spectrum, t, intensities, p0 = initial_guesses)
 
 
 plt.plot(t,intensities, 'b-', label = 'data')
-plt.plot(t, spectrum(t, *popt), 'r-', label = 'fit lorentzian')
+# plt.plot(t, spectrum(t, *popt), 'r-', label = 'fit lorentzian')
 #plot guesses
-# plt.plot(t, spectrum(t, *initial_guesses), 'g-', label = 'initial guess')
-plt.xlabel('time (s)')
+plt.plot(t, spectrum(t, *initial_guesses), 'g-', label = 'initial guess')
+plt.xlabel('time (ms)')
 plt.ylabel('Intensity (V)')
 plt.legend()
 plt.title('Absorption spectrum of rubidium with fit')
@@ -221,57 +221,5 @@ peaks = [first_peak, second_peak, third_peak, fourth_peak]
 calibration_wavelengths= [wavelength1, wavelength2, wavelength3, wavelength4]
 
 conversion, conversion_err = calibrate_to_wavelength(peaks, calibration_wavelengths)
-#find temperature
-
-wavelength_std_1= conversion*std1
-wavelength_std_1_err= conversion_err*std1
-
-
-wavelength_std_2= conversion*std2
-wavelength_std_2_err= conversion_err*std2
-
-
-wavelength_std_3= conversion*std3
-wavelength_std_3_err= conversion_err*std3
-
-wavelength_std_4= conversion*std4
-wavelength_std_4_err= conversion_err*std4
-
-T87_F2,T87_F2_err = TemperatureRb(wavelength1, wavelength_std_1,wavelength_std_1_err, m_r87) #first peak is T87_F2 transition
-
-T85_F3,T85_F3_err = TemperatureRb(wavelength2, wavelength_std_2,wavelength_std_2_err, m_r85) #second peak is T85_F3 transition
-
-T85_F2,T85_F2_err = TemperatureRb(wavelength3, wavelength_std_3,wavelength_std_3_err, m_r85) #third peak is T85_F2 transition
-
-T87_F1,T87_F1_err = TemperatureRb(wavelength4, wavelength_std_4,wavelength_std_4_err, m_r87) #fourth peak is T87_F1 transition
-
-print('Temperature of 87Rb F=2 transition: ', T87_F2, '+/-', T87_F2_err, 'K')
-print('Temperature of 85Rb F=3 transition: ', T85_F3, '+/-', T85_F3_err, 'K')
-print('Temperature of 85Rb F=2 transition: ', T85_F2, '+/-', T85_F2_err, 'K')
-print('Temperature of 87Rb F=1 transition: ', T87_F1, '+/-', T87_F1_err, 'K')
-
-
-#evaluate the expected stds from ambient temperature
-
-T_ambient = 300
-T_ambient_err = 1
-
-std_87_F2, std_87_F2_err = std_from_T(T_ambient, T_ambient_err, wavelength1, m_r87)
-std_85_F3, std_85_F3_err = std_from_T(T_ambient, T_ambient_err, wavelength2, m_r85)
-std_85_F2, std_85_F2_err = std_from_T(T_ambient, T_ambient_err, wavelength3, m_r85)
-std_87_F1, std_87_F1_err = std_from_T(T_ambient, T_ambient_err, wavelength4, m_r87)
-
-print('Expected standard deviation of 87Rb F=2 transition: ', std_87_F2, '+/-', std_87_F2_err, 'nm')
-print('Found standard deviation of 87Rb F=2 transition: ', wavelength_std_1, '+/-', wavelength_std_1_err, 'nm')
-
-print('Expected standard deviation of 85Rb F=3 transition: ', std_85_F3, '+/-', std_85_F3_err, 'nm')
-print('Found standard deviation of 85Rb F=3 transition: ', wavelength_std_2, '+/-', wavelength_std_2_err, 'nm')
-
-print('Expected standard deviation of 85Rb F=2 transition: ', std_85_F2, '+/-', std_85_F2_err, 'nm')
-print('Found standard deviation of 85Rb F=2 transition: ', wavelength_std_3, '+/-', wavelength_std_3_err, 'nm')
-
-print('Expected standard deviation of 87Rb F=1 transition: ', std_87_F1, '+/-', std_87_F1_err, 'nm')
-print('Found standard deviation of 87Rb F=1 transition: ', wavelength_std_4, '+/-', wavelength_std_4_err, 'nm')
-
 
 
