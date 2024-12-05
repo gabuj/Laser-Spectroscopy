@@ -1,14 +1,25 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+import scipy.constants as const
+import numpy as numpy
+from scipy.signal import find_peaks
+
+
 
 #Constants
 m_r85=1.4099943e-25#mass of rubidium 85 atom in kg
 m_r87=1.4431618e-25#mass of rubidium 87 atom in kg
-c=3e8#speed of light in m/s
-k=1.38e-23#Boltzmann constant in J/K
 
+c= const.c
+h= const.h
+e= const.e
 
+#calculated values
+d=21.8e-2
+d_err=0.2e-2
+delta_f=c/(4*d)
+delta_f_err=delta_f*d_err/d
 
 #define function to fit to doppler broadening data
 
@@ -26,23 +37,8 @@ def spectrum(x, gamma_1, x0_1, gamma_2, x0_2, gamma_3, x0_3, gamma_4, x0_4, gamm
     #change I0 if you're using
     return I0+ (lorentzian(x, gamma_1, x0_1,A1)+lorentzian(x, gamma_2, x0_2,A2)+lorentzian(x, gamma_3, x0_3,A3)+lorentzian(x, gamma_4, x0_4,A4)+lorentzian(x, gamma_5, x0_5,A5)+lorentzian(x, gamma_6, x0_6,A6)+lorentzian(x, gamma_7, x0_7,A7)+lorentzian(x, gamma_8, x0_8,A8)+lorentzian(x, gamma_9, x0_9,A9)+lorentzian(x, gamma_10, x0_10,A10)+lorentzian(x, gamma_11, x0_11,A11)+lorentzian(x, gamma_12, x0_12,A12) + lorentzian(x,gamma_13, x0_13,A13)+lorentzian(x, gamma_14, x0_14,A14)+lorentzian(x, gamma_15, x0_15,A15)+lorentzian(x, gamma_16, x0_16,A16)+lorentzian(x, gamma_17, x0_17,A17)+lorentzian(x, gamma_18, x0_18,A18)+lorentzian(x, gamma_19, x0_19,A19)+lorentzian(x, gamma_20, x0_20,A20)+lorentzian(x, gamma_21, x0_21,A21)+lorentzian(x, gamma_22, x0_22,A22)+lorentzian(x, gamma_23, x0_23,A23)+lorentzian(x, gamma_24, x0_24,A24))
 
-# def TemperatureRb(mean, std,std_err,m):
-#     #find temperature using doppler boradening formula
-#     #convert mean from nm to m
-#     mean = mean*1e-9
-#     std = std*1e-9
-#     std_err = std_err*1e-9
-    
-#     T= m*c**2*std**2/(k*mean**2)
-#     T_err= T*2*std_err/std
-#     return T, T_err
-
-# def std_from_T(T, T_err, mean, m):
-#     #find standard deviation from temperature
-#     std = np.sqrt(k*T*mean**2/(m*c**2))
-#     std_err = std*T_err/T
-#     return std, std_err
-
+def calibration_fit(x,a,b,c):
+    return a*x**2+b*x+c
 
 def calibrate_to_wavelength(peaks, calibration_wavelengths):
     #find distance in time between peaks
@@ -59,23 +55,103 @@ def calibrate_to_wavelength(peaks, calibration_wavelengths):
 
 
 #load data
-filename = 'FREE_3.csv'
-background_filename = 'BGFREE_3.csv'
+filename = 'Calibration/WF_2.csv'
+background_filename = 'Calibration/WFBG_2.csv'
+calibration_filename = 'Calibration/WFCAL_2.csv'
 data = np.loadtxt(filename, delimiter = ',', skiprows = 1)
 background = np.loadtxt(background_filename, delimiter = ',', skiprows = 1)
+calibration = np.loadtxt(calibration_filename, delimiter = ',', skiprows = 1)
 
 #extract data
-t = np.array(data[:,0])
-intensities = np.array(data[:,1]) - np.array(background[:,1])
+t = np.array(data[:,0])*1e-3
+intensities = np.array(data[:,1])  - np.array(background[:,1])
+calibration_t = np.array(calibration[:,0])*1e-3
+calibration_intensities = np.array(calibration[:,1])
+
+#make time start from 0
+t = t-t[0]
+calibration_t = calibration_t - calibration_t[0]
+
 
 
 # #plot data
-# plt.plot(t, intensities, 'b-', label = 'data')
-# plt.xlabel('time (microseconds?)')
-# plt.ylabel('Intensity (V)')
-# plt.legend()
-# plt.title('Doppler free spectrum of rubidium')
-# plt.show()
+plt.plot(t, intensities, 'b-', label = 'data')
+plt.plot(calibration_t, calibration_intensities, 'r-', label = 'calibration 1')
+plt.xlabel('time (s)')
+plt.ylabel('Intensity (V)')
+plt.legend()
+plt.title('Doppler free spectrum of rubidium')
+plt.show()
+
+
+#find poeaks and plot
+peaks, _ = find_peaks(calibration_intensities, height=0.026, distance=1000)
+
+#plot peaks on graph
+plt.plot(calibration_t, calibration_intensities, 'r-', label = 'calibration 1')
+plt.plot(calibration_t[peaks], calibration_intensities[peaks], 'x')
+plt.xlabel('time (s)')
+plt.ylabel('Intensity (V)')
+plt.legend()
+plt.title('Calibration spectrum of fabry perot')
+plt.show()
+
+#find the time of the peaks
+peak_times = calibration_t[peaks]
+n= np.arange(0,len(calibration_t))
+n_peaks = n[peaks]
+#find distances between peak_times and plot them
+distances = np.diff(peak_times)
+#n_xaxis is mid point between each n_peak
+peak_t_xaxis = (peak_times[1:]+peak_times[:-1])/2 
+#only get first 13 values
+peak_t_xaxis = peak_t_xaxis[:13]
+distances = distances[:13]
+
+plt.plot(peak_t_xaxis, distances, 'r-', label = 'calibration')
+plt.xlabel('mid peak time (s)')
+plt.ylabel('distance between peaks (s)')
+plt.legend()
+plt.title('Calibration spectrum of fabry perot')
+plt.show()
+
+#we expect the scanning to not be linear but quadratic, fit the difference in peak (which should be equal) to a line and see the slope. This will be the conversion factor from time to wavelength
+lin_cal,lin_cal_err= np.polyfit(peak_t_xaxis, distances, 1, cov=True)
+m_cal= lin_cal[0]
+c_cal= lin_cal[1]
+m_cal_err= np.sqrt(lin_cal_err[0,0])
+c_cal_err= np.sqrt(lin_cal_err[1,1])
+
+#plot fit
+
+plt.plot(peak_t_xaxis, distances, 'r-', label = 'calibration')
+plt.plot(peak_t_xaxis, m_cal*peak_t_xaxis+c_cal, 'b-', label = 'fit')
+plt.xlabel('mid peak time (s)')
+plt.ylabel('distance between peaks (s)')
+plt.legend()
+plt.title('Calibration spectrum of fabry perot')
+plt.show()
+
+
+#convert from time to frequency assuming f0=0 using delta_f calculated above
+f= m_cal*t**2+c_cal*t
+f_err= np.sqrt((m_cal_err*t**2)**2+(c_cal_err*t)**2)
+f=f*delta_f
+f_err=np.sqrt((f*delta_f_err/delta_f)**2+(f_err*delta_f/delta_f)**2)
+
+#plot intensities against frequency
+
+plt.plot(f, intensities, 'b-', label = 'data')
+plt.xlabel('frequency (Hz)')
+plt.ylabel('Intensity (V)')
+plt.legend()
+plt.title('Doppler free spectrum of rubidium')
+plt.show()
+
+
+
+
+
 
 #we expect 3 spliting per ground level weith one burn hole each so 6 peals in total times 4 ground states = 24 peaks
 
@@ -191,7 +267,7 @@ plt.plot(t,intensities, 'b-', label = 'data')
 plt.plot(t, spectrum(t, *popt), 'r-', label = 'fit lorentzian')
 #plot guesses
 # plt.plot(t, spectrum(t, *initial_guesses), 'g-', label = 'initial guess')
-plt.xlabel('time (s)')
+plt.xlabel('time (ms)')
 plt.ylabel('Intensity (V)')
 plt.legend()
 plt.title('Absorption spectrum of rubidium with fit')
@@ -221,57 +297,9 @@ peaks = [first_peak, second_peak, third_peak, fourth_peak]
 calibration_wavelengths= [wavelength1, wavelength2, wavelength3, wavelength4]
 
 conversion, conversion_err = calibrate_to_wavelength(peaks, calibration_wavelengths)
-#find temperature
-
-wavelength_std_1= conversion*std1
-wavelength_std_1_err= conversion_err*std1
 
 
-wavelength_std_2= conversion*std2
-wavelength_std_2_err= conversion_err*std2
 
-
-wavelength_std_3= conversion*std3
-wavelength_std_3_err= conversion_err*std3
-
-wavelength_std_4= conversion*std4
-wavelength_std_4_err= conversion_err*std4
-
-T87_F2,T87_F2_err = TemperatureRb(wavelength1, wavelength_std_1,wavelength_std_1_err, m_r87) #first peak is T87_F2 transition
-
-T85_F3,T85_F3_err = TemperatureRb(wavelength2, wavelength_std_2,wavelength_std_2_err, m_r85) #second peak is T85_F3 transition
-
-T85_F2,T85_F2_err = TemperatureRb(wavelength3, wavelength_std_3,wavelength_std_3_err, m_r85) #third peak is T85_F2 transition
-
-T87_F1,T87_F1_err = TemperatureRb(wavelength4, wavelength_std_4,wavelength_std_4_err, m_r87) #fourth peak is T87_F1 transition
-
-print('Temperature of 87Rb F=2 transition: ', T87_F2, '+/-', T87_F2_err, 'K')
-print('Temperature of 85Rb F=3 transition: ', T85_F3, '+/-', T85_F3_err, 'K')
-print('Temperature of 85Rb F=2 transition: ', T85_F2, '+/-', T85_F2_err, 'K')
-print('Temperature of 87Rb F=1 transition: ', T87_F1, '+/-', T87_F1_err, 'K')
-
-
-#evaluate the expected stds from ambient temperature
-
-T_ambient = 300
-T_ambient_err = 1
-
-std_87_F2, std_87_F2_err = std_from_T(T_ambient, T_ambient_err, wavelength1, m_r87)
-std_85_F3, std_85_F3_err = std_from_T(T_ambient, T_ambient_err, wavelength2, m_r85)
-std_85_F2, std_85_F2_err = std_from_T(T_ambient, T_ambient_err, wavelength3, m_r85)
-std_87_F1, std_87_F1_err = std_from_T(T_ambient, T_ambient_err, wavelength4, m_r87)
-
-print('Expected standard deviation of 87Rb F=2 transition: ', std_87_F2, '+/-', std_87_F2_err, 'nm')
-print('Found standard deviation of 87Rb F=2 transition: ', wavelength_std_1, '+/-', wavelength_std_1_err, 'nm')
-
-print('Expected standard deviation of 85Rb F=3 transition: ', std_85_F3, '+/-', std_85_F3_err, 'nm')
-print('Found standard deviation of 85Rb F=3 transition: ', wavelength_std_2, '+/-', wavelength_std_2_err, 'nm')
-
-print('Expected standard deviation of 85Rb F=2 transition: ', std_85_F2, '+/-', std_85_F2_err, 'nm')
-print('Found standard deviation of 85Rb F=2 transition: ', wavelength_std_3, '+/-', wavelength_std_3_err, 'nm')
-
-print('Expected standard deviation of 87Rb F=1 transition: ', std_87_F1, '+/-', std_87_F1_err, 'nm')
-print('Found standard deviation of 87Rb F=1 transition: ', wavelength_std_4, '+/-', wavelength_std_4_err, 'nm')
 
 
 
