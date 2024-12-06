@@ -56,18 +56,21 @@ def calibrate_to_wavelength(peaks, calibration_wavelengths):
 
 
 #load data
-filename = 'Calibration/WF_2.csv'
-background_filename = 'Calibration/WFBG_2.csv'
-calibration_filename = 'Calibration/WFCAL_2.csv'
+filename = 'Calibration/WF_4.csv'
+background_filename = 'Calibration/WFBG_4.csv'
+calibration_filename = 'Calibration/WFCAL_4.csv'
 data = np.loadtxt(filename, delimiter = ',', skiprows = 1)
 background = np.loadtxt(background_filename, delimiter = ',', skiprows = 1)
 calibration = np.loadtxt(calibration_filename, delimiter = ',', skiprows = 1)
 
 #extract data
-t = np.array(data[:,0])*1e-3
-intensities = np.array(data[:,1])  - np.array(background[:,1])
-calibration_t = np.array(calibration[:,0])*1e-3
+t = np.array(data[:,0])
+intensities = np.array(data[:,1]) # - np.array(background[:,1])
+calibration_t = np.array(calibration[:,0])
 calibration_intensities = np.array(calibration[:,1])
+
+t_background = np.array(background[:,0])
+intensities_background = np.array(background[:,1])
 
 #make time start from 0
 t = t-t[0]
@@ -77,7 +80,8 @@ calibration_t = calibration_t - calibration_t[0]
 
 # #plot data
 plt.plot(t, intensities, 'b-', label = 'data')
-plt.plot(calibration_t, calibration_intensities, 'r-', label = 'calibration 1')
+# plt.plot(calibration_t, calibration_intensities, 'r-', label = 'calibration 1')
+
 plt.xlabel('time (s)')
 plt.ylabel('Intensity (V)')
 plt.legend()
@@ -273,28 +277,3 @@ plt.show()
 
 
 #I expect the first peak to be the first 85R ground state transition, the second peak to be the 85R first excited state transition, the third peak to be the 87R ground state transition and the fourth peak to be the 87R first excited state transition
-first_peak= popt[0]
-std1 = popt[1]
-
-second_peak = popt[3]
-std2 = popt[4]
-
-third_peak = popt[6]
-std3 = popt[7]
-
-fourth_peak = popt[9]
-std4 = popt[10]
-
-#map from t to wavelength
-wavelength1 = 780.236 #Rb87_F2
-wavelength2 = 780.239 #Rb85_F3
-wavelength3 = 780.244 #Rb85_F2
-wavelength4 = 780.250 #Rb87_F1
-
-peaks = [first_peak, second_peak, third_peak, fourth_peak]
-calibration_wavelengths= [wavelength1, wavelength2, wavelength3, wavelength4]
-
-conversion, conversion_err = calibrate_to_wavelength(peaks, calibration_wavelengths)
-
-
-
