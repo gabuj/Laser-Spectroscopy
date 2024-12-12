@@ -22,9 +22,9 @@ def calibrate(calibration_t, calibration_intensities):
     peaks, _ = find_peaks(calibration_intensities, height=0.02, distance=1000)
     
     #plot peaks on graph
-    plt.plot(calibration_t, calibration_intensities, 'r-', label = 'calibration 1')
-    plt.plot(calibration_t[peaks], calibration_intensities[peaks], 'x')
-    plt.show()
+    # plt.plot(calibration_t, calibration_intensities, 'r-', label = 'calibration 1')
+    # plt.plot(calibration_t[peaks], calibration_intensities[peaks], 'x')
+    # plt.show()
 
     #find the time of the peaks
     peak_times = calibration_t[peaks]
@@ -58,12 +58,8 @@ def calibrate(calibration_t, calibration_intensities):
     
     #plot fit
 
-    plt.errorbar(peak_times, peaks_freq, yerr=peaks_freq_err, fmt='x', label = 'calibration data')
-    plt.plot(peak_times, calibration_fit(peak_times, a_cal, b_cal,c_cal), 'b-', label = 'calibration fit')
-    plt.xlabel('mid peak time (s)')
-    plt.ylabel('distance between peaks (s)')
-    plt.legend()
-    plt.title('Calibration spectrum of fabry perot')
-    plt.show()
+    # plt.errorbar(peak_times, peaks_freq, yerr=peaks_freq_err, fmt='x', label = 'calibration data')
+    # plt.plot(peak_times, calibration_fit(peak_times, a_cal, b_cal,c_cal), 'b-', label = 'calibration fit')
+    # plt.show()
 
     return a_cal, b_cal, c_cal, a_cal_err, b_cal_err, c_cal_err
