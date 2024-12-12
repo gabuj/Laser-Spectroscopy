@@ -24,7 +24,7 @@ background_filenamem= 'polarisation/data/pol_front/WFBG_PM4.csv'
 calibration_filenamem= 'polarisation/data/pol_front/WFCA_PM4.csv'
 
 #load data
-t, intensities, calibration_t, calibration_intensities = get_data(filenamem, background_filenamem, calibration_filenamem)
+t, intensities, calibration_t, calibration_intensities = get_data(filenamep, background_filenamep, calibration_filenamep)
 
 #plot data
 plt.plot(t, intensities, label = 'data')
@@ -48,7 +48,7 @@ f_err= np.sqrt((a_cal_err*t**2)**2+(b_cal_err*t)**2+(c_cal_err)**2)
 
 #plot intensities against frequency
 
-plt.plot(f, intensities, 'b-', label = 'data')
+plt.errorbar(f, intensities, xerr=f_err, fmt='o', label = 'data')
 plt.show()
 
 #fit spectrum
