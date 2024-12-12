@@ -56,9 +56,9 @@ def calibrate_to_wavelength(peaks, calibration_wavelengths):
 
 
 #load data
-filenamep = 'polarisation/data/WF_PP1.csv'
-background_filenamep = 'polarisation/data/WFBG_PP1.csv'
-calibration_filenamep = 'polarisation/data/WFCA_PP1.csv'
+filenamep = 'polarisation/data/pol_front/WF_PP4.csv'
+background_filenamep = 'polarisation/data/pol_front/WFBG_PP4.csv'
+calibration_filenamep = 'polarisation/data/pol_front/WFCA_PP4.csv'
 
 datap = np.loadtxt(filenamep, delimiter = ',', skiprows = 1)
 backgroundp = np.loadtxt(background_filenamep, delimiter = ',', skiprows = 1)
@@ -73,9 +73,9 @@ calibration_intensitiesp = np.array(calibrationp[:,1])
 # t_backgroundp = np.array(backgroundp[:,0])
 # intensities_backgroundp = np.array(backgroundp[:,1])
 
-filename0= 'polarisation/data/WF_P01.csv'
-background_filename0= 'polarisation/data/WFBG_P01.csv'
-calibration_filename0= 'polarisation/data/WFCA_P01.csv'
+filename0= 'polarisation/data/pol_front/WF_P04.csv'
+background_filename0= 'polarisation/data/pol_front/WFBG_P04.csv'
+calibration_filename0= 'polarisation/data/pol_front/WFCA_P04.csv'
 
 data0= np.loadtxt(filename0, delimiter = ',', skiprows = 1)
 background0= np.loadtxt(background_filename0, delimiter = ',', skiprows = 1)
@@ -86,9 +86,9 @@ intensities0= np.array(data0[:,1])  - np.array(background0[:,1])
 calibration_t0= np.array(calibration0[:,0])
 calibration_intensities0= np.array(calibration0[:,1])
 
-filenamem= 'polarisation/data/WF_PM1.csv'
-background_filenamem= 'polarisation/data/WFBG_PM1.csv'
-calibration_filenamem= 'polarisation/data/WFCA_PM1.csv'
+filenamem= 'polarisation/data/pol_front/WF_PM4.csv'
+background_filenamem= 'polarisation/data/pol_front/WFBG_PM4.csv'
+calibration_filenamem= 'polarisation/data/pol_front/WFCA_PM4.csv'
 
 datam= np.loadtxt(filenamem, delimiter = ',', skiprows = 1)
 backgroundm= np.loadtxt(background_filenamem, delimiter = ',', skiprows = 1)
@@ -97,7 +97,7 @@ calibrationm= np.loadtxt(calibration_filenamem, delimiter = ',', skiprows = 1)
 tm= np.array(datam[:,0])
 intensitiesm= np.array(datam[:,1])  - np.array(backgroundm[:,1])
 calibration_tm= np.array(calibrationm[:,0])
-calibration_intensitiesm= np.array(calibrationm[:,1])
+calibration_intensities= np.array(calibrationm[:,1])
 
 # #plot data
 plt.plot(tp, intensitiesp, 'b-', label = 'sigma + data')
