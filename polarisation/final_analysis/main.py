@@ -6,6 +6,7 @@ from scipy.signal import find_peaks
 from acquire_data import get_data
 from chop import chop
 from calibration import calibrate
+from fit_spectrum import fit
 
 #possible data
 filenamep = 'polarisation/data/pol_front/WF_PP4.csv'
@@ -23,7 +24,7 @@ background_filenamem= 'polarisation/data/pol_front/WFBG_PM4.csv'
 calibration_filenamem= 'polarisation/data/pol_front/WFCA_PM4.csv'
 
 #load data
-t, intensities, calibration_t, calibration_intensities = get_data(filenamep, background_filenamep, calibration_filenamep)
+t, intensities, calibration_t, calibration_intensities = get_data(filenamem, background_filenamem, calibration_filenamem)
 
 #plot data
 plt.plot(t, intensities, label = 'data')
@@ -41,3 +42,14 @@ calibration_t, calibration_intensities = chop(calibration_t, calibration_intensi
 #calibrate data
 a_cal, b_cal, c_cal, a_cal_err, b_cal_err, c_cal_err = calibrate(calibration_t, calibration_intensities)
 
+#convert from time to frequency assuming f0=0 using delta_f calculated above
+f= a_cal*t**2+b_cal*t + c_cal
+f_err= np.sqrt((a_cal_err*t**2)**2+(b_cal_err*t)**2+(c_cal_err)**2)
+
+#plot intensities against frequency
+
+plt.plot(f, intensities, 'b-', label = 'data')
+plt.show()
+
+#fit spectrum
+fit(f, intensities)
