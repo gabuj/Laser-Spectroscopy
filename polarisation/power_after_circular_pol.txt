@@ -1,0 +1,15 @@
+angle   power   power_err
+before: 605 1
+with linear polariser at 10 dewgerees found maxima of 473.6 0.4
+now after quarter wave plate:
+
+To find the maxima (when the axis of laser and circular polariser are same)
+-10 444.5   0.4
+-5  457.4   0.3
+-2  459.4   0.4
+-1  463.5   0.4
+0   461.6   0.4
+1   456.7   0.5
+2   456.3   0.3
+5   446.3   0.3  
+10  426.9   0.4
