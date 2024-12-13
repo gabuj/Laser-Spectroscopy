@@ -1,10 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.optimize import curve_fit
-import scipy.constants as const
-from scipy.signal import find_peaks
 from acquire_data import get_data
 from chop import chop
+
 from calibration import calibrate
 from fit_spectrum import fit
 
@@ -24,7 +22,7 @@ background_filenamem= 'polarisation/data/pol_front/WFBG_PM4.csv'
 calibration_filenamem= 'polarisation/data/pol_front/WFCA_PM4.csv'
 
 #load data
-t, intensities, calibration_t, calibration_intensities = get_data(filename0, background_filename0, calibration_filename0)
+t, intensities, calibration_t, calibration_intensities = get_data(filenamep, background_filenamep, calibration_filenamep)
 
 #plot data
 plt.plot(t, intensities, label = 'data')

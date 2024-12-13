@@ -22,8 +22,11 @@ def calibrate(calibration_t, calibration_intensities):
     peaks, _ = find_peaks(calibration_intensities, height=0.02, distance=1000)
     
     #plot peaks on graph
-    # plt.plot(calibration_t, calibration_intensities, 'r-', label = 'calibration 1')
-    # plt.plot(calibration_t[peaks], calibration_intensities[peaks], 'x')
+    # plt.plot(calibration_t, calibration_intensities, 'r-', label = 'calibration data')
+    # plt.plot(calibration_t[peaks], calibration_intensities[peaks], 'x', label = 'peaks')
+    # plt.xlabel('time (s)')
+    # plt.ylabel('intensity (V)')
+    # plt.legend()
     # plt.show()
 
     #find the time of the peaks
@@ -59,7 +62,10 @@ def calibrate(calibration_t, calibration_intensities):
     #plot fit
 
     # plt.errorbar(peak_times, peaks_freq, yerr=peaks_freq_err, fmt='x', label = 'calibration data')
-    # plt.plot(peak_times, calibration_fit(peak_times, a_cal, b_cal,c_cal), 'b-', label = 'calibration fit')
+    # plt.plot(peak_times, calibration_fit(peak_times, a_cal, b_cal,c_cal), 'b-', label = 'fit')
+    # plt.xlabel('peak time (s)')
+    # plt.ylabel('peaks frequency (Hz)')
+    # plt.legend()
     # plt.show()
 
     return a_cal, b_cal, c_cal, a_cal_err, b_cal_err, c_cal_err
