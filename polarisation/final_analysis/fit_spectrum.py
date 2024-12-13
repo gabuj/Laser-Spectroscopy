@@ -64,14 +64,14 @@ initial_guesses = [gamma1_guess, x0_1_guess, gamma2_guess, x0_2_guess, gamma3_gu
 
 def fit(f, intensities):
     #fit gaussians to data
-    plt.plot(f,intensities, 'b-', label = 'data')
-    #plot guesses
-    plt.plot(f, spectrum(f, *initial_guesses), 'g-', label = 'initial guess')
-    plt.xlabel('frequency (GHz)')
-    plt.ylabel('Intensity (V)')
-    plt.legend()
-    plt.title('polarisation spectroscopy of rubidium sigma minus pump')
-    plt.show()
+    # plt.plot(f,intensities, 'b-', label = 'data')
+    # #plot guesses
+    # plt.plot(f, spectrum(f, *initial_guesses), 'g-', label = 'initial guess')
+    # plt.xlabel('frequency (GHz)')
+    # plt.ylabel('Intensity (V)')
+    # plt.legend()
+    # plt.title('polarisation spectroscopy of rubidium sigma minus pump')
+    # plt.show()
     
     popt, pcov = curve_fit(spectrum, f, intensities, p0 = initial_guesses)
     plt.plot(f,intensities, 'b-', label = 'data')

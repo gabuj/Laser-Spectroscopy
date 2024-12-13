@@ -24,7 +24,7 @@ background_filenamem= 'polarisation/data/pol_front/WFBG_PM4.csv'
 calibration_filenamem= 'polarisation/data/pol_front/WFCA_PM4.csv'
 
 #load data
-t, intensities, calibration_t, calibration_intensities = get_data(filenamep, background_filenamep, calibration_filenamep)
+t, intensities, calibration_t, calibration_intensities = get_data(filename0, background_filename0, calibration_filename0)
 
 #plot data
 plt.plot(t, intensities, label = 'data')
@@ -46,9 +46,17 @@ a_cal, b_cal, c_cal, a_cal_err, b_cal_err, c_cal_err = calibrate(calibration_t, 
 f= a_cal*t**2+b_cal*t + c_cal
 f_err= np.sqrt((a_cal_err*t**2)**2+(b_cal_err*t)**2+(c_cal_err)**2)
 
-#plot intensities against frequency
+#convert to GHz
+f= f/1e9
+f_err= f_err/1e9
 
-plt.errorbar(f, intensities, xerr=f_err, fmt='o', label = 'data')
+#plot intensities against frequency
+plt.show()
+# plt.errorbar(f, intensities, xerr=f_err, fmt='o', label = 'data')
+plt.plot(f, intensities, 'r-', label = 'data')
+plt.xlabel('frequency (Hz)')
+plt.ylabel('Intensity (V)')
+plt.title('linear polarised pump')
 plt.show()
 
 #fit spectrum
