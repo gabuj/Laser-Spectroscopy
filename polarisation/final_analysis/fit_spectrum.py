@@ -83,6 +83,7 @@ def fit(f, intensities):
     plt.legend()
     plt.title('polarisation spectroscopy of rubidium sigma minus pump')
     plt.show()
+    print(popt[0], popt[2], popt[4], popt[6], popt[8], popt[10])
 
 
 
