@@ -22,7 +22,7 @@ background_filenamem= 'polarisation/data/pol_front/WFBG_PM4.csv'
 calibration_filenamem= 'polarisation/data/pol_front/WFCA_PM4.csv'
 
 #load data
-t, intensities, calibration_t, calibration_intensities = get_data(filenamep, background_filenamep, calibration_filenamep)
+t, intensities, calibration_t, calibration_intensities = get_data(filenamem, background_filenamem, calibration_filenamem)
 
 #plot data
 plt.plot(t, intensities, label = 'data')
