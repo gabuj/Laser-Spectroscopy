@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-def lorentzian(x, gamma, x0,A):
-    return A*(2/(np.pi)*gamma) * ((gamma)**2)/(4*(x-x0)**2+(gamma)**2)*A
+def lorentzian(f, gamma, f0,A):
+    return A*(2/(np.pi)*gamma) * ((gamma)**2)/(4*(2*np.pi*(f-f0))**2+gamma**2) #check if correct...
 
 def spectrum(x, gamma_1, x0_1, gamma_2, x0_2, gamma_3, x0_3, gamma_4, x0_4, gamma_5, x0_5, gamma_6, x0_6,I0, A1, A2, A3, A4, A5, A6):
     #change I0 if you're using
