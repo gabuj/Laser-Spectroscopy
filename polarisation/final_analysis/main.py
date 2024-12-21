@@ -24,7 +24,7 @@ background_filenamem= 'polarisation/data/pol_front/WFBG_M.csv'
 calibration_filenamem= 'polarisation/data/pol_front/WFCA_M.csv'
 
 #load data
-t, intensities, calibration_t, calibration_intensities = get_data(filenamem, background_filenamem, calibration_filenamem)
+t, intensities, calibration_t, calibration_intensities = get_data(filenamep, background_filenamep, calibration_filenamep)
 
 
 
@@ -56,3 +56,7 @@ plt.show()
 
 #fit spectrum
 fit(f, intensities)
+
+
+
+
